@@ -1,0 +1,43 @@
+Le bureau du TA est assez petit et ne peut
+accueillir qu'un seul bureau avec une chaise et un ordinateur.
+==> process 1 student at a time
+
+Il y a trois chaises dans le
+couloir à l'extérieur du bureau où les étudiants peuvent s'asseoir et attendre si le TA aide
+actuellement un autre étudiant ==> waiting list 3 spots
+
+Lorsqu'aucun étudiant n'a besoin d'aide pendant les
+heures de bureau, le TA s'assoit à son bureau et fait une sieste
+==> waiting list empty and not busy => sleep
+
+Si un étudiant arrive
+pendant les heures de bureau et trouve le TA endormi, l'étudiant doit réveiller le TA pour
+lui demander de l'aide
+==> waiting list >0 must wake TA
+
+. Si un étudiant arrive et trouve le TA en train d'aider un autre
+étudiant, l'étudiant s'assoit sur une des chaises dans le couloir et attend
+==> if TA busy, student goes to waiting list
+
+ Si aucune chaise
+n'est disponible, l'étudiant reviendra plus tard
+==> if waiting list == 3, full, student goes away
+
+----------------------------
+Sequence:
+
+- create n students
+- each student has its own thread
+- create TA in a separate thread
+- n students are working
+
+repeat
+- randomly make a student need help
+- send student to TA
+- repeat randomly make student need help
+- send the next students to waiting list
+- when waiting list is full, student continues working
+- if waiting list empty and TA free -> TA sleeps()
+- if student comes and TA is sleeping,
+	wake TA up with semaphore
+- repeat
