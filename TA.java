@@ -1,9 +1,11 @@
 public class TA extends Thread{
     
     private boolean asleep;
+    private String[] waitingList; //contains a list of students waiting
 
     public TA() {
         asleep = false; //starts awake
+        waitingList = new String[] {}; // empty initially
     }
 
     @Override

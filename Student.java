@@ -1,7 +1,9 @@
 public class Student extends Thread {
     
-    public Student() {
-        
+    private int id;
+
+    public Student(int i) {
+        i = id;
     }
 
     @Override

@@ -1,3 +1,5 @@
+import java.util.concurrent.Semaphore;
+
 public class SleepingTA {
 
     public static void main(String[] args) {
@@ -27,15 +29,17 @@ public class SleepingTA {
         //create n students
         Student[] students = new Student[numberStudents];
         for (int i = 0; i < numberStudents; i++){
-            students[i] = new Student();
-            //students[i].run(); ??? run thread here?
+            students[i] = new Student(i);
+            students[i].run();
         }
 
         //create TA
         TA assistant = new TA();
-        //assistant.run();
+        assistant.run();
 
         //create semaphores
+        // with number of permits 1 means only 1 student can access TA at a time
+        Semaphore sem = new Semaphore(1);
 
         //put a specific time to end the session? maybe let it run forever
         
