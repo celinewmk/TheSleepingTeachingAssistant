@@ -28,12 +28,16 @@ public class SleepingTA {
         Student[] students = new Student[numberStudents];
         for (int i = 0; i < numberStudents; i++){
             students[i] = new Student();
+            //students[i].run(); ??? run thread here?
         }
 
         //create TA
         TA assistant = new TA();
+        //assistant.run();
 
         //create semaphores
+
+        //put a specific time to end the session? maybe let it run forever
         
     }
 }
