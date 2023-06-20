@@ -1,26 +1,48 @@
+import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
+
 public class TA extends Thread{
     
     private boolean asleep;
-    private String[] waitingList; //contains a list of students waiting
+    private ArrayList<Student> studentList; //contains a list of students waiting
+    Semaphore sleepingSemaphore;
+    Semaphore waitlist;
 
-    public TA() {
+    public TA(Semaphore s, Semaphore e) {
         asleep = false; //starts awake
-        waitingList = new String[] {}; // empty initially
+        studentList = new ArrayList<>(); // empty initially
+        sleepingSemaphore = s;
+        waitlist = e;
     }
 
     @Override
     public void run(){
 
         //repeat forever
+        while (true){
 
-        //if there is student in waiting list
-        //help student
+            //if there is student in waiting list
+            //help student
+            if (studentList.size() != 0){
+                
+            }else{
 
-        //if waiting list empty
-        //sleep
+            //if waiting list empty
+            //sleep
+                
 
-        //student informs that TA is sleeping with semaphore
-        //TA wakes up
+            //student informs that TA is sleeping with semaphore
+            //TA wakes up
+
+            }
+
+
+        }
+
+    }
+
+    public void addStudentWaiting(Student student){
+        studentList.add(student);
     }
 
     public void beginNap() {

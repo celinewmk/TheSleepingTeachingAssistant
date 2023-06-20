@@ -26,6 +26,19 @@ public class SleepingTA {
 
         System.out.println("Starting a session with " + numberStudents + " students.");
         
+        //create semaphores
+        // with number of permits 1 means only 1 student can access TA at a time
+       
+        //for mutually exclusive access to TA
+        Semaphore mutex = new Semaphore(1);
+
+        //to synchronise waiting list
+        Semaphore waitlist = new Semaphore(3);
+
+        //to sunchronise sleeping TA
+        Semaphore sleepingSemaphore = new Semaphore(1);
+
+
         //create n students
         Student[] students = new Student[numberStudents];
         for (int i = 0; i < numberStudents; i++){
@@ -34,14 +47,10 @@ public class SleepingTA {
         }
 
         //create TA
-        TA assistant = new TA();
+        TA assistant = new TA(sleepingSemaphore, waitlist);
         assistant.run();
 
-        //create semaphores
-        // with number of permits 1 means only 1 student can access TA at a time
-        Semaphore sem = new Semaphore(1);
 
-        //put a specific time to end the session? maybe let it run forever
-        
+
     }
 }
