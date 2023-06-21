@@ -2,6 +2,30 @@ import java.util.concurrent.Semaphore;
 
 public class SleepingTA {
 
+    private Semaphore mutex;
+    private Semaphore waitlist;
+    private Semaphore sleepingSemaphore;
+    private Student[] students;
+    private TA assistant;
+
+    public SleepingTA(int numberStudents) {
+        students = new Student[numberStudents];
+        for (int i = 0; i < numberStudents; i++) {
+            students[i] = new Student(i);
+        }
+        
+        //for mutually exclusive access to TA
+        mutex = new Semaphore(1);
+
+        //to synchronise waiting list
+        waitlist = new Semaphore(3);
+
+        //to sunchronise sleeping TA
+        sleepingSemaphore = new Semaphore(1);
+
+        assistant = new TA(sleepingSemaphore, waitlist);
+    }
+
     public static void main(String[] args) {
 
         int numberStudents = 0;
@@ -26,29 +50,30 @@ public class SleepingTA {
 
         System.out.println("Starting a session with " + numberStudents + " students.");
         
+        SleepingTA sleepingTA = new SleepingTA(numberStudents);
         //create semaphores
         // with number of permits 1 means only 1 student can access TA at a time
        
-        //for mutually exclusive access to TA
-        Semaphore mutex = new Semaphore(1);
+        // //for mutually exclusive access to TA
+        // mutex = new Semaphore(1);
 
-        //to synchronise waiting list
-        Semaphore waitlist = new Semaphore(3);
+        // //to synchronise waiting list
+        // Semaphore waitlist = new Semaphore(3);
 
-        //to sunchronise sleeping TA
-        Semaphore sleepingSemaphore = new Semaphore(1);
+        // //to sunchronise sleeping TA
+        // Semaphore sleepingSemaphore = new Semaphore(1);
 
 
         //create n students
-        Student[] students = new Student[numberStudents];
-        for (int i = 0; i < numberStudents; i++){
-            students[i] = new Student(i);
-            students[i].run();
-        }
+        // Student[] students = new Student[numberStudents];
+        // for (int i = 0; i < numberStudents; i++){
+        //     students[i] = new Student(i);
+        //     students[i].run();
+        // }
 
         //create TA
-        TA assistant = new TA(sleepingSemaphore, waitlist);
-        assistant.run();
+        // TA assistant = new TA(sleepingSemaphore, waitlist);
+        // assistant.run();
 
 
 
