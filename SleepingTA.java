@@ -8,6 +8,8 @@ public class SleepingTA {
     private Student[] students;
     private TA assistant;
 
+    private static final int lengthOfWaitingLine = 3;
+
     public SleepingTA(int numberStudents) {
         students = new Student[numberStudents];
         for (int i = 0; i < numberStudents; i++) {
@@ -18,9 +20,9 @@ public class SleepingTA {
         mutex = new Semaphore(1);
 
         //to synchronise waiting list
-        waitlist = new Semaphore(3);
+        waitlist = new Semaphore(lengthOfWaitingLine);
 
-        //to sunchronise sleeping TA
+        //to synchronise sleeping TA
         sleepingSemaphore = new Semaphore(1);
 
         assistant = new TA(sleepingSemaphore, waitlist);
