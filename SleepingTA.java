@@ -1,6 +1,7 @@
 import java.util.concurrent.Semaphore;
 
 //TODO print messages when TA is working and when new student arrives etc
+// im not sure about line 23 and the wait and release things since its diff from wait() and notify()
 
 public class SleepingTA {
 
