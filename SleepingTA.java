@@ -1,39 +1,34 @@
 import java.util.concurrent.Semaphore;
-import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
 
+//TODO print messages when TA is working and when new student arrives etc
 
 public class SleepingTA {
 
-    private Semaphore mutex;
-    private Semaphore waitlist;
-    private Semaphore sleepingSemaphore;
-    private Student[] students;
-    private TA assistant;
+    public static  Semaphore waitlist;
+    public static  Semaphore TAReady; 
+    public static  Semaphore studentReady;
+    public static int numberOfFreeSeats = 3;
 
-    private static final int lengthOfWaitingLine = 3;
+    public static Student[] students;
 
-    public SleepingTA(int numberStudents) {
-        students = new Student[numberStudents];
-        for (int i = 0; i < numberStudents; i++) {
-            students[i] = new Student(i);
-        }
-        
-        //for mutually exclusive access to TA
-        mutex = new Semaphore(1);
-
-        //to synchronise waiting list
-        waitlist = new Semaphore(lengthOfWaitingLine);
-
-        //to synchronise sleeping TA
-        sleepingSemaphore = new Semaphore(1);
-
-        assistant = new TA(sleepingSemaphore, waitlist);
-    }
+    public static TA assistant;
 
     public static void main(String[] args) {
 
-        int numberStudents = 0;
+        //initialize semaphores:
+
+        //to count number of waiting seats
+        waitlist = new Semaphore(1);
+        waitlist.release(); //waitlist starts with being available
+
+        //to check if TA is sleeping or not
+        TAReady = new Semaphore(1);
+
+        //number of students waiting ready to be assisted
+        studentReady = new Semaphore(1);
+
+        //number of students that TA will work with
+        int numberStudents;
 
         //get arguments
         if (args.length > 0 ) {
@@ -54,114 +49,97 @@ public class SleepingTA {
         }
 
         System.out.println("Starting a session with " + numberStudents + " students.");
-        
-        SleepingTA sleepingTA = new SleepingTA(numberStudents);
-        //create semaphores
-        // with number of permits 1 means only 1 student can access TA at a time
-       
-        // //for mutually exclusive access to TA
-        // mutex = new Semaphore(1);
-
-        // //to synchronise waiting list
-        // Semaphore waitlist = new Semaphore(3);
-
-        // //to sunchronise sleeping TA
-        // Semaphore sleepingSemaphore = new Semaphore(1);
-
-
-        //create n students
-        // Student[] students = new Student[numberStudents];
-        // for (int i = 0; i < numberStudents; i++){
-        //     students[i] = new Student(i);
-        //     students[i].run();
-        // }
 
         //create TA
-        // TA assistant = new TA(sleepingSemaphore, waitlist);
-        // assistant.run();
+        TA assistant = new TA();
 
+        //start TA thread
+        assistant.run();
+        
+        //create n students
+        Student[] students = new Student[numberStudents];
+        for (int i = 0; i < numberStudents; i++){
+            students[i] = new Student();
 
-
+            //start student threads
+            students[i].run();
+        }
     }
 }
 
 class Student extends Thread {
 
-    private int id;
-
-    public Student(int i) {
-        i = id;
-    }
-
     @Override
     public void run(){
 
-        //repeat forever
-        //student randomly asks for help to TA
-        //if full return
+        //run forever
+        while (true){
+            
+            try {
+               
+                //Wait for seats to be accessible (so that TA is not modifying it at the same time)
+                SleepingTA.waitlist.acquire();
 
-        //if TA asleep, wake TA and get help
+                //now we are able to modify free seats
+                
+                //if there are any free seats
+                if (SleepingTA.numberOfFreeSeats > 0){
+                    //get a spot in the waitlist
 
-        //if TA awake and free, get help
+                    // sits down
+                    SleepingTA.numberOfFreeSeats--; 
 
-        //if TA awake and busy, go to queue
+                    //tell TA theres a student waiting
+                    SleepingTA.studentReady.release();
 
-        return;
+                    //unlock seats
+                    SleepingTA.waitlist.release();
+
+                    //wait until TA is ready, waiting for TAReady.release()
+                    SleepingTA.TAReady.acquire();
+
+                }else{
+                    //go back
+                    SleepingTA.waitlist.release(); //release lock on seats to allow modifying
+                }
+
+
+            } catch (InterruptedException e) {
+                System.out.println("Error occured: " + e.getMessage());
+            }
+        }
     }   
 }
 
 
 class TA extends Thread{
-    
-    private boolean asleep;
-    private ArrayList<Student> studentList; //contains a list of students waiting
-    Semaphore sleepingSemaphore;
-    Semaphore waitlist;
-
-    public TA(Semaphore s, Semaphore e) {
-        asleep = false; //starts awake
-        studentList = new ArrayList<>(); // empty initially
-        sleepingSemaphore = s;
-        waitlist = e;
-    }
 
     @Override
     public void run(){
-
         //repeat forever
         while (true){
+            
+            try {
+                //is there a student ready? if none then just sleep
+                SleepingTA.studentReady.acquire();
+            
+                //Can I increment free spots? if unsuccessful then sleep
+                SleepingTA.waitlist.acquire();
 
-            //if there is student in waiting list
-            //help student
-            if (studentList.size() != 0){
-                
-            }else{
+                //acquiring seat successful, increment
+                SleepingTA.numberOfFreeSeats++;
 
-            //if waiting list empty
-            //sleep
-                
+                //TA assists students
+                SleepingTA.TAReady.release();
 
-            //student informs that TA is sleeping with semaphore
-            //TA wakes up
+                //can allow waitlist to freely modify within student class
+                SleepingTA.waitlist.release();
 
+
+            } catch (InterruptedException e) {
+                System.out.println("Error occured: " + e.getMessage());
             }
 
-
         }
-
-    }
-
-    public void addStudentWaiting(Student student){
-        studentList.add(student);
-    }
-
-    public void beginNap() {
-        System.out.println("TA is now asleep...");
-        asleep = true;
-    }
-
-    public void wakeUp() {
-        System.out.println("TA is now awake!");
-        asleep = false;
     }
 }

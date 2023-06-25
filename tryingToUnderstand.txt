@@ -41,3 +41,14 @@ repeat
 - if student comes and TA is sleeping,
 	wake TA up with semaphore
 - repeat
+
+-------------------
+
+3 semaphores needed
+
+1. studentWaiting - helps to count waiting customers
+2. TAReady - to check status of the ta if sleeping or not
+3. Numberofseats - to keep count of the number of available seats in waiting list 
+	(so student wait if there is free seat or leave if theres none)
+
+4. mutex - to increase of decrease number of free seats?
