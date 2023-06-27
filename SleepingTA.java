@@ -93,16 +93,18 @@ public class SleepingTA {
 class Student extends Thread {
 
     public int studentId;
+    public boolean iAmTheFirst; //boolean to tell TA that it's the first student
 
     public Student(int studentId) {
         this.studentId = studentId;
         System.out.println("Creating student " + studentId);
+        iAmTheFirst = false; //initially false
     }
 
     @Override
     public void run(){
 
-        //repeat until 20 students have been helped
+        //repeat until n students have been helped
 
         while (SleepingTA.maximumStudentsHelped > 0){  
             try {
@@ -126,16 +128,17 @@ class Student extends Thread {
 
                     //release immediately if student comes and waitlist is empty
                     if (SleepingTA.studentQueue.size() == 1) {
+                        this.iAmTheFirst = true;
                         SleepingTA.studentReady.release(); //make student available for the TA
                         System.out.println("The student goes immediately and wakes up the TA since he is the first one");
 
                     //this is if a student comes and there is ppl so he has to sit down and wait    
                     }else{
                         //get a spot in the waitlist
-                        System.out.println("Waiting list is of length: " + SleepingTA.numberOfFreeSeats );
                         System.out.println("There are seats left. So student " + studentId + " sits down");
                         // sits down
-                        SleepingTA.numberOfFreeSeats--; 
+                        SleepingTA.numberOfFreeSeats--;
+                        System.out.println("NUMBER OF FREE SEATS : " + SleepingTA.numberOfFreeSeats);
                         //tell TA theres a student waiting
                         SleepingTA.studentReady.release(); //make student available for the TA
                     }
@@ -195,15 +198,21 @@ class TA extends Thread{
                 //is there a student ready? acquire a student
                 SleepingTA.studentReady.acquire();
 
+                //get the student to be helped
+                Student currentlyHelped = SleepingTA.studentQueue.remove();
+
                 //Can I access the waitlist? wait until no student is modifying it
                 SleepingTA.waitlist.acquire();
 
                 System.out.println("TA is now modifying waitlist");
 
-                //acquiring seat successful, one chair is free
-                SleepingTA.numberOfFreeSeats++;
-
-                Student currentlyHelped = SleepingTA.studentQueue.remove();
+                //warning: do not decrement if it was an immediate student
+                if (!currentlyHelped.iAmTheFirst){
+                    //acquiring seat successful, one chair is free
+                    SleepingTA.numberOfFreeSeats++;
+                }
+                
+                System.out.println("NUMBER OF FREE SEATS : " + SleepingTA.numberOfFreeSeats);
 
                 System.out.println("The TA chooses the student " + currentlyHelped.studentId);
 
@@ -211,15 +220,14 @@ class TA extends Thread{
                 Thread.sleep(5000);
                 
                 System.out.println("TA has finished helping student " + currentlyHelped.studentId + " , he is now free :)");
+                
+                SleepingTA.maximumStudentsHelped--; //decrement students helped so that TA is able to finish the session
+                System.out.println("Students left to help before terminating : " + SleepingTA.maximumStudentsHelped);
 
                 //can allow waitlist to freely modify within student class
                 SleepingTA.waitlist.release();
 
                 System.out.println("TA releases waitlist lock");
-
-                SleepingTA.maximumStudentsHelped--; //decrement students helped so that TA is able to finish the session
-
-                System.out.println("Helped : " + SleepingTA.maximumStudentsHelped);
 
             } catch (InterruptedException e) {
                 System.out.println("Error occured: " + e.getMessage());
@@ -227,6 +235,6 @@ class TA extends Thread{
 
         }
 
-        System.out.println("This thread is DONE");
+        System.out.println("TA thread is DONE");
     }
 }
