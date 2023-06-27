@@ -1,4 +1,7 @@
 import java.util.concurrent.Semaphore;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Random;
 
 //TODO randomize thread.sleep times
 
@@ -12,9 +15,11 @@ public class SleepingTA {
     public static Student[] students;
     public static TA assistant;
 
-    public static int maximumStudentsHelped = 5; // the ta will go home after he helped 20 students
+    public static int maximumStudentsHelped = 5; // the ta will go home after he helped 5 students
 
     public static int currentlyHelpingID;
+
+    public static Queue<Student> studentQueue;
 
     public static void main(String[] args) {
 
@@ -31,6 +36,8 @@ public class SleepingTA {
 
         //number of students that TA will work with
         int numberStudents;
+
+        studentQueue = new LinkedList<Student>();
 
         //get arguments
         if (args.length > 0 ) {
@@ -106,20 +113,24 @@ class Student extends Thread {
 
         while (SleepingTA.maximumStudentsHelped > 0){  
             try {
-                
-                System.out.println();
-
+                Random random = new Random();
+                int delay = random.nextInt(3000) + 1000; 
                 //introduce a delay of 3 seconds between student arrivals
-                Thread.sleep(3000); 
+                Thread.sleep(delay); 
 
                 //Wait for seats to be accessible (so that TA is not modifying it at the same time)
                 SleepingTA.waitlist.acquire();
 
                 //now we are able to modify free seats
                 System.out.println("Student " + studentId + " arrives");
+                SleepingTA.studentQueue.add(this);
 
                 System.out.println("Student " + studentId + " is modifying seats!");
 
+                if (SleepingTA.studentQueue.size() == 1) {
+                    SleepingTA.studentReady.release();
+                    System.out.println("Student go");
+                }
                 //if there are any free seats
                 if (SleepingTA.numberOfFreeSeats > 0){
 
@@ -137,7 +148,7 @@ class Student extends Thread {
                     //unlock seats
                     SleepingTA.waitlist.release();
 
-                    System.out.println("Student is done modifying seats!");
+                    System.out.println("Student " + studentId +" is done modifying seats!");
 
                     //wait until TA is ready, waiting for TAReady.release()
                     SleepingTA.TAReady.acquire();
@@ -210,8 +221,6 @@ class TA extends Thread{
                 SleepingTA.maximumStudentsHelped--; //decrement students helped so that TA is able to finish the session
 
                 System.out.println("Helped : " + SleepingTA.maximumStudentsHelped);
-
-                System.out.println();
 
             } catch (InterruptedException e) {
                 System.out.println("Error occured: " + e.getMessage());
