@@ -20,7 +20,7 @@ public class SleepingTA {
     public static Student[] students;       // array of all the students in the session
     public static TA assistant;             // TA helping the student
 
-    public static int maximumStudentsHelped = 8; // the ta will go home after helping 8 students
+    public static int maximumStudentsHelped = 10; // the ta will go home after helping students 10 times
     public static int numberOfStudents; // the number of students in the session that TA will work with
 
     public static Queue<Student> studentQueue; // queue to keep track of which student is waiting
@@ -192,7 +192,7 @@ class TA extends Thread {
     @Override
     public void run(){
         
-        //repeat until 8 students have been helped
+        //repeat until TA has helped students 10 times
 
         while (SleepingTA.maximumStudentsHelped > 0) {
             try {
