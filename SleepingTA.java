@@ -122,26 +122,31 @@ class Student extends Thread {
                 //now we are able to modify free seats
                 System.out.println("Student " + studentId + " arrives");
                 
-
                 
                 //if there are any free seats
                 if (SleepingTA.numberOfFreeSeats > 0){
 
                     SleepingTA.studentQueue.add(this);
-                    
-                    System.out.println("Student " + studentId + " is modifying seats!");
 
-                    //get a spot in the waitlist
-                    System.out.println("There are seats left. So student " + studentId + " sits down");
+                    //check if it is an immediate student
+                    if (SleepingTA.studentQueue.size() == 1){
+                        System.out.println("The student goes immediately and wakes up the TA since he is the first one");
+                    }else{//otherwise sit 
+                        System.out.println("Student " + studentId + " is modifying seats!");
+                        //get a spot in the waitlist
+                        System.out.println("There are seats left. So student " + studentId + " sits down");               
+                    }
+  
                     // sits down
                     SleepingTA.numberOfFreeSeats--;
                     
-                    System.out.println("NUMBER OF FREE SEATS : " + SleepingTA.numberOfFreeSeats);
-                    System.out.println("Queue now is: "  + SleepingTA.studentQueue.toString());
+                    //System.out.println("NUMBER OF FREE SEATS : " + SleepingTA.numberOfFreeSeats);
+
+                    System.out.println("QUEUE now is: "  + SleepingTA.studentQueue.toString());
 
                     //tell TA theres a student waiting
                     System.out.println("Student " + studentId + " is waiting for the TA");
-                    
+
                     SleepingTA.studentReady.release(); //make student available for the TA
 
                     //unlock seats
@@ -209,7 +214,7 @@ class TA extends Thread{
                 SleepingTA.numberOfFreeSeats++;
                 
                 
-                System.out.println("NUMBER OF FREE SEATS : " + SleepingTA.numberOfFreeSeats);
+                //System.out.println("NUMBER OF FREE SEATS : " + SleepingTA.numberOfFreeSeats);
 
                 
                 SleepingTA.TAReady.release();
@@ -218,7 +223,7 @@ class TA extends Thread{
                 Thread.sleep(5000);
                 
                 System.out.println("TA has finished helping student " + currentlyHelped.studentId + " , he is now free :)");
-                System.out.println("Queue now is: "  + SleepingTA.studentQueue.toString());
+                System.out.println("QUEUE now is: "  + SleepingTA.studentQueue.toString());
                 
                 SleepingTA.maximumStudentsHelped--; //decrement students helped so that TA is able to finish the session
                 System.out.println("Students left to help before terminating : " + SleepingTA.maximumStudentsHelped);
@@ -226,7 +231,7 @@ class TA extends Thread{
                 //can allow waitlist to freely modify within student class
                 SleepingTA.waitlist.release();
 
-                System.out.println("TA releases waitlist lock");
+                //System.out.println("TA releases waitlist lock");
 
             } catch (InterruptedException e) {
                 System.out.println("Error occured: " + e.getMessage());
