@@ -221,7 +221,7 @@ class TA extends Thread {
 
                 SleepingTA.TAReady.release();
 
-                //introduce a delay, the TA is helping the student for 5 seconds
+                // introduce a delay when the TA is helping the student
                 Random random = new Random();
                 int timeHelping = random.nextInt(5000) + 1000;
                 Thread.sleep(timeHelping);
