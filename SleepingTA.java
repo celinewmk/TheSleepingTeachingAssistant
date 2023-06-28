@@ -16,8 +16,7 @@ public class SleepingTA {
     public static TA assistant;
 
     public static int maximumStudentsHelped = 5; // the ta will go home after he helped 5 students
-
-    public static int currentlyHelpingID;
+    public static int numberOfStudents; //the number of students in the session that TA will work with
 
     public static Queue<Student> studentQueue;
 
@@ -34,35 +33,32 @@ public class SleepingTA {
         //number of students waiting ready to be assisted
         studentReady = new Semaphore(0);
 
-        //number of students that TA will work with
-        int numberStudents;
-
         studentQueue = new LinkedList<Student>();
 
         //get arguments
         if (args.length > 0 ) {
             try {
-                numberStudents = Integer.parseInt(args[0]);
+                numberOfStudents = Integer.parseInt(args[0]);
             } catch (Exception e) {
                 System.out.println("Please enter an integer for the number of students!");
                 return;
             }
 
-            if (numberStudents <= 0){
+            if (numberOfStudents <= 0){
                 System.out.println("Please enter an integer greater than 0 for the number of students!");
                 return;
             }
         }
         else {
-            numberStudents = 3; //default value
+            numberOfStudents = 3; //default value
         }
 
-        System.out.println("Starting a session with " + numberStudents + " students.");
+        System.out.println("Starting a session with " + numberOfStudents + " students.");
 
 
         //create n students
-        Student[] students = new Student[numberStudents];
-        for (int i = 0; i < numberStudents; i++) {
+        Student[] students = new Student[numberOfStudents];
+        for (int i = 0; i < numberOfStudents; i++) {
             //start student threads
             students[i] = new Student(i);
             students[i].start();
@@ -240,6 +236,6 @@ class TA extends Thread{
         }
 
         System.out.println("TA thread is DONE");
-        SleepingTA.TAReady.release(3); //release all permits so students can end
+        SleepingTA.TAReady.release(SleepingTA.numberOfStudents); //release all permits so students can end
     }
 }
