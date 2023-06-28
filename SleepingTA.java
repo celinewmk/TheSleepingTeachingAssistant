@@ -140,9 +140,9 @@ class Student extends Thread {
                     System.out.println("Queue now is: "  + SleepingTA.studentQueue.toString());
 
                     //tell TA theres a student waiting
-                    SleepingTA.studentReady.release(); //make student available for the TA
-
                     System.out.println("Student " + studentId + " is waiting for the TA");
+                    
+                    SleepingTA.studentReady.release(); //make student available for the TA
 
                     //unlock seats
                     SleepingTA.waitlist.release();
@@ -184,14 +184,17 @@ class TA extends Thread{
         while (SleepingTA.maximumStudentsHelped > 0){    
             try {
 
+                if (SleepingTA.studentQueue.size() == 0){
+                    System.out.println("The TA is sleeping");
+                    //is there a student ready? acquire a student
+                    SleepingTA.studentReady.acquire();
+                    //if we were able to acquire, then student wakes up!
+                    System.out.println("The TA wakes up");
+                }else{
+                    // if waiting list is not empty, just take a student
+                    SleepingTA.studentReady.acquire();
+                }
                 
-                System.out.println("The TA is sleeping");
-               
-                //is there a student ready? acquire a student
-                SleepingTA.studentReady.acquire();
-                //if we were able to acquire, then student wakes up!
-                System.out.println("The TA wakes up");
-
                 //Can I access the waitlist? wait until no student is modifying it
                 SleepingTA.waitlist.acquire();
 
@@ -232,6 +235,6 @@ class TA extends Thread{
         }
 
         System.out.println("TA thread is DONE");
-        SleepingTA.TAReady.release(3);
+        SleepingTA.TAReady.release(3); //release all permits so students can end
     }
 }
