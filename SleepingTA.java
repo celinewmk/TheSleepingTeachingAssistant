@@ -21,6 +21,7 @@ public class SleepingTA {
     public static TA assistant;             // TA helping the student
 
     public static int maximumStudentsHelped = 10; // the ta will go home after helping students 10 times
+    public static int count = 10;
     public static int numberOfStudents; // the number of students in the session that TA will work with
 
     public static Queue<Student> studentQueue; // queue to keep track of which student is waiting
@@ -59,6 +60,7 @@ public class SleepingTA {
         }
 
         System.out.println("Starting a session with " + numberOfStudents + " students.");
+        System.out.println("During this session, the TA will provide help on "+ maximumStudentsHelped +" occasions before going home.");
 
         //create n students
         Student[] students = new Student[numberOfStudents];
@@ -118,7 +120,7 @@ class Student extends Thread {
 
         //repeat until n students have been helped
 
-        while (SleepingTA.maximumStudentsHelped > 0) {
+        while (SleepingTA.count > 0) {
             try {
                 //introduce a delay between student arrivals
                 Random random = new Random();
@@ -141,7 +143,9 @@ class Student extends Thread {
                         //check if it is an immediate student
                         if (SleepingTA.studentQueue.size() == 1 && !TA.isCurrentlyHelping) {
                             System.out.println(
-                                    "Student " + studentId + " wakes up the TA since there's no one with the TA or waiting to be helped. They sit until the TA ask them to enter the office to get help");
+                                    "Student " + studentId
+                                            + " wakes up the TA since there's no one. Student " + studentId
+                                    + " sits down until the TA ask them to enter the office to get help");
                         } else {
                             //otherwise sit and get a spot in the waitlist
                             System.out.println("There are seats left. So student " + studentId + " sits down");
@@ -194,7 +198,7 @@ class TA extends Thread {
         
         //repeat until TA has helped students 10 times
 
-        while (SleepingTA.maximumStudentsHelped > 0) {
+        while (SleepingTA.count > 0) {
             try {
 
                 if (SleepingTA.studentQueue.size() == 0) {
@@ -223,19 +227,25 @@ class TA extends Thread {
 
                 // introduce a delay when the TA is helping the student
                 Random random = new Random();
-                int timeHelping = random.nextInt(5000) + 1000;
+                int timeHelping = random.nextInt(6000) + 1000;
                 Thread.sleep(timeHelping);
 
                 System.out.println(
-                        "TA has finished helping student " + currentlyHelped.studentId + ", they are now free :)\nStudent " + currentlyHelped.studentId + " goes back to programming");
+                        "TA has finished helping student " + currentlyHelped.studentId + ", they are now free :)");
                 isCurrentlyHelping = false;
 
-                SleepingTA.maximumStudentsHelped--; //decrement students helped so that TA is able to finish the session
-                if (SleepingTA.maximumStudentsHelped == 0) {
+                SleepingTA.count--; //decrement students helped so that TA is able to finish the session
+                if (SleepingTA.count == 0) {
                     sessionOver = true;
                 }
-                System.out
-                        .println("Students left to help before session is over: " + SleepingTA.maximumStudentsHelped);
+
+                if (SleepingTA.count == 0) {
+                    System.out
+                        .println("TA has helped " + (SleepingTA.maximumStudentsHelped - SleepingTA.count) + " times which is the maximum number of times they can help");
+                } else {
+                    System.out
+                        .println("TA has helped " + (SleepingTA.maximumStudentsHelped - SleepingTA.count) + " time(s). They will provide help "+ SleepingTA.count + " more time(s) and then stop");
+                }
 
                 //can allow waitlist to freely modify within student class
                 SleepingTA.waitlist.release();
