@@ -170,7 +170,7 @@ class Student extends Thread {
                         //wake up TA
                         SleepingTA.TAReady.acquire();
                     } else {
-                        System.out.println("No seats left. So student " + studentId + " leaves");
+                        System.out.println("No seats left. So student " + studentId + " leaves TA's office and goes back to programming...");
                         //go back
                         SleepingTA.waitlist.release(); //release lock on seats to allow modifying
                     }
