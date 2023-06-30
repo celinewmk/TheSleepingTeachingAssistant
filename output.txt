@@ -1,6 +1,12 @@
 celine_wan@Celines-MacBook-Pro TheSleepingTeachingAssistant % java SleepingTA 5
-Starting a session with 5 students.
-During this session, the TA will provide help on 10 occasions before going home.
+--------------------------------------------- Description ---------------------------------------------------------
+
+The session contains 5 students.
+During this session, the TA will provide help on 10 different occasions before ending the session.
+A student can ask for help more than 1 time if the TA hasn't reached the maximum amount of times they can help.
+A student can choose to not ask for help too.
+
+----------------------------------------- Starting the session ----------------------------------------------------
 Student 0 is programming
 Student 1 is programming
 Student 2 is programming
@@ -8,77 +14,70 @@ Student 3 is programming
 Student 4 is programming
 TA is in their office
 The TA is sleeping
-Student 3 arrives
-Student 3 wakes up the TA since there's no one. Student 3 sits down until the TA ask them to enter the office to get help
+Student 0 arrives
+Student 0 wakes up the TA since there's no one. Student 0 sits down until the TA ask them to enter the office to get help
 The TA wakes up
+The TA asks student 0 to come in their office, and starts helping them
+TA has finished helping student 0, they are now free :)
+The TA is sleeping
+Student 4 arrives
+Student 4 wakes up the TA since there's no one. Student 4 sits down until the TA ask them to enter the office to get help
+The TA wakes up
+Student 2 arrives
+There are seats left. So student 2 sits down
+Student 3 arrives
+There are seats left. So student 3 sits down
+Student 1 arrives
+No seats left. So student 1 leaves
+Student 0 arrives
+No seats left. So student 0 leaves
+The TA asks student 4 to come in their office, and starts helping them
+TA has finished helping student 4, they are now free :)
+The TA asks student 2 to come in their office, and starts helping them
+TA has finished helping student 2, they are now free :)
 The TA asks student 3 to come in their office, and starts helping them
 TA has finished helping student 3, they are now free :)
-TA has helped 1 time(s). They will provide help 9 more time(s) and then stop
 The TA is sleeping
-Student 1 arrives
-Student 1 wakes up the TA since there's no one. Student 1 sits down until the TA ask them to enter the office to get help
-The TA wakes up
 Student 4 arrives
-There are seats left. So student 4 sits down
+Student 4 wakes up the TA since there's no one. Student 4 sits down until the TA ask them to enter the office to get help
+The TA wakes up
+Student 1 arrives
+There are seats left. So student 1 sits down
 Student 0 arrives
 There are seats left. So student 0 sits down
 Student 2 arrives
 No seats left. So student 2 leaves
 Student 3 arrives
 No seats left. So student 3 leaves
-The TA asks student 1 to come in their office, and starts helping them
-TA has finished helping student 1, they are now free :)
-TA has helped 2 time(s). They will provide help 8 more time(s) and then stop
 The TA asks student 4 to come in their office, and starts helping them
 TA has finished helping student 4, they are now free :)
-TA has helped 3 time(s). They will provide help 7 more time(s) and then stop
-The TA asks student 0 to come in their office, and starts helping them
-TA has finished helping student 0, they are now free :)
-TA has helped 4 time(s). They will provide help 6 more time(s) and then stop
-The TA is sleeping
-Student 2 arrives
-Student 2 wakes up the TA since there's no one. Student 2 sits down until the TA ask them to enter the office to get help
-The TA wakes up
-Student 1 arrives
-There are seats left. So student 1 sits down
-Student 3 arrives
-There are seats left. So student 3 sits down
-Student 4 arrives
-No seats left. So student 4 leaves
-The TA asks student 2 to come in their office, and starts helping them
-TA has finished helping student 2, they are now free :)
-TA has helped 5 time(s). They will provide help 5 more time(s) and then stop
 The TA asks student 1 to come in their office, and starts helping them
 TA has finished helping student 1, they are now free :)
-TA has helped 6 time(s). They will provide help 4 more time(s) and then stop
-The TA asks student 3 to come in their office, and starts helping them
-TA has finished helping student 3, they are now free :)
-TA has helped 7 time(s). They will provide help 3 more time(s) and then stop
+The TA asks student 0 to come in their office, and starts helping them
+TA has finished helping student 0, they are now free :)
 The TA is sleeping
-Student 0 arrives
-Student 0 wakes up the TA since there's no one. Student 0 sits down until the TA ask them to enter the office to get help
-The TA wakes up
 Student 4 arrives
-There are seats left. So student 4 sits down
+Student 4 wakes up the TA since there's no one. Student 4 sits down until the TA ask them to enter the office to get help
+The TA wakes up
+Student 3 arrives
+There are seats left. So student 3 sits down
 Student 2 arrives
 There are seats left. So student 2 sits down
 Student 1 arrives
 No seats left. So student 1 leaves
-Student 3 arrives
-No seats left. So student 3 leaves
-The TA asks student 0 to come in their office, and starts helping them
-TA has finished helping student 0, they are now free :)
-TA has helped 8 time(s). They will provide help 2 more time(s) and then stop
+Student 0 arrives
+No seats left. So student 0 leaves
 The TA asks student 4 to come in their office, and starts helping them
 TA has finished helping student 4, they are now free :)
-TA has helped 9 time(s). They will provide help 1 more time(s) and then stop
+The TA asks student 3 to come in their office, and starts helping them
+TA has finished helping student 3, they are now free :)
 The TA asks student 2 to come in their office, and starts helping them
 TA has finished helping student 2, they are now free :)
 TA has helped 10 times which is the maximum number of times they can help
 The TA informs the students that they will stop helping them since we've reached the end of the session and it's time to go home
 Student 1 leaves
 Student 2 leaves
-Student 3 leaves
-Student 4 leaves
 Student 0 leaves
+Student 4 leaves
+Student 3 leaves
 Session over!
